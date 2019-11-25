@@ -1,0 +1,168 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://scripts/game.gd" type="Script" id=1]
+[ext_resource path="res://assets/fundo.png" type="Texture" id=2]
+[ext_resource path="res://scripts/felpudo.gd" type="Script" id=3]
+[ext_resource path="res://assets/felpudo/felpudoVoa1.png" type="Texture" id=4]
+[ext_resource path="res://assets/felpudo/felpudoVoa2.png" type="Texture" id=5]
+[ext_resource path="res://assets/felpudo/felpudoVoa3.png" type="Texture" id=6]
+[ext_resource path="res://assets/felpudo/felpudoVoa4.png" type="Texture" id=7]
+[ext_resource path="res://assets/felpudo/felpudoVoa5.png" type="Texture" id=8]
+[ext_resource path="res://assets/felpudo/felpudoVoa6.png" type="Texture" id=9]
+[ext_resource path="res://scenes/cano.tscn" type="PackedScene" id=10]
+[ext_resource path="res://scripts/gerador.gd" type="Script" id=11]
+[ext_resource path="res://assets/font.ttf" type="DynamicFontData" id=12]
+[ext_resource path="res://sound/somScore.ogg" type="AudioStream" id=13]
+[ext_resource path="res://sound/somHit.ogg" type="AudioStream" id=14]
+
+[sub_resource type="Animation" id=1]
+resource_name = "BackAnim"
+length = 3.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("BackAnim/Sprite1:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 0, 0 ), Vector2( -1026, 0 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("BackAnim/Sprite2:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ Vector2( 1026, 0 ), Vector2( 0, 0 ) ]
+}
+
+[sub_resource type="SpriteFrames" id=2]
+animations = [ {
+"frames": [ ExtResource( 4 ), ExtResource( 5 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 8 ), ExtResource( 9 ) ],
+"loop": true,
+"name": "default",
+"speed": 8.0
+} ]
+
+[sub_resource type="CircleShape2D" id=3]
+radius = 93.603
+
+[sub_resource type="SegmentShape2D" id=4]
+a = Vector2( -18.1906, -3.42253 )
+b = Vector2( 982.32, -2.82525 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 160
+font_data = ExtResource( 12 )
+
+[node name="GameNode" type="Node2D"]
+position = Vector2( -4, 0 )
+script = ExtResource( 1 )
+
+[node name="BackAnim" type="AnimationPlayer" parent="."]
+editor/display_folded = true
+autoplay = "BackAnim"
+anims/BackAnim = SubResource( 1 )
+
+[node name="Sprite1" type="Sprite" parent="BackAnim"]
+scale = Vector2( 3.8, 3.6 )
+texture = ExtResource( 2 )
+centered = false
+
+[node name="Sprite2" type="Sprite" parent="BackAnim"]
+position = Vector2( 1026, 0 )
+scale = Vector2( 3.8, 3.6 )
+texture = ExtResource( 2 )
+centered = false
+
+[node name="Felpudo" type="RigidBody2D" parent="."]
+editor/display_folded = true
+position = Vector2( 167.185, 859.464 )
+z_index = 1
+mode = 2
+gravity_scale = 18.0
+script = ExtResource( 3 )
+
+[node name="FelpudoAnim" type="AnimatedSprite" parent="Felpudo"]
+position = Vector2( 15.3848, -4.27234 )
+scale = Vector2( 1.2, 1.2 )
+frames = SubResource( 2 )
+frame = 1
+playing = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Felpudo"]
+position = Vector2( 17.124, -3.42468 )
+shape = SubResource( 3 )
+
+[node name="Limites" type="StaticBody2D" parent="."]
+editor/display_folded = true
+position = Vector2( 3.68827, 0.307354 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Limites"]
+position = Vector2( 26.8735, 1703.16 )
+shape = SubResource( 4 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="Limites"]
+position = Vector2( 18.9386, 3.28342 )
+shape = SubResource( 4 )
+
+[node name="Canos" type="Node2D" parent="."]
+position = Vector2( -3, 0 )
+z_index = 2
+
+[node name="Cano" parent="Canos" instance=ExtResource( 10 )]
+position = Vector2( 1167.2, 598.311 )
+z_as_relative = false
+
+[node name="Gerador" type="Position2D" parent="Canos"]
+position = Vector2( 1163.15, 592.976 )
+script = ExtResource( 11 )
+
+[node name="Timer" type="Timer" parent="Canos/Gerador"]
+wait_time = 3.0
+autostart = true
+
+[node name="TimerToReplay" type="Timer" parent="."]
+wait_time = 2.0
+
+[node name="Node2D" type="Node2D" parent="."]
+z_index = 3
+
+[node name="Control" type="Control" parent="Node2D"]
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Label" type="Label" parent="Node2D/Control"]
+margin_left = 20.0056
+margin_top = 92.0166
+margin_right = 997.006
+margin_bottom = 285.017
+custom_fonts/font = SubResource( 5 )
+text = "0"
+align = 1
+
+[node name="Score" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 13 )
+pitch_scale = 0.5
+
+[node name="Timer_Score" type="Timer" parent="Score"]
+wait_time = 0.01
+
+[node name="Hit" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 14 )
+pitch_scale = 0.84
+
+[node name="Timer_Hit" type="Timer" parent="Hit"]
+wait_time = 0.01
+[connection signal="timeout" from="Canos/Gerador/Timer" to="Canos/Gerador" method="_on_Timer_timeout"]
+[connection signal="timeout" from="TimerToReplay" to="." method="_on_TimerToReplay_timeout"]
+[connection signal="timeout" from="Score/Timer_Score" to="." method="_on_Timer_Score_timeout"]
+[connection signal="timeout" from="Hit/Timer_Hit" to="." method="_on_Timer_Hit_timeout"]
